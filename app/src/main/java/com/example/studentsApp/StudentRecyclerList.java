@@ -38,7 +38,17 @@ public class StudentRecyclerList extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int pos) {
-                Log.d("TAG", "Row was clicked " + pos);
+                // todo: open student details screen
+            }
+        });
+
+        Button addStudentButton = (Button)findViewById(R.id.activityStudentRecyclerList_button);
+
+        addStudentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StudentRecyclerList.this, AddStudentActivity.class));
+                adapter.notifyItemInserted(data.size());
             }
         });
     }
@@ -57,7 +67,7 @@ public class StudentRecyclerList extends AppCompatActivity {
                 public void onClick(View view) {
                     int pos = (int)cb.getTag();
                     Student st = data.get(pos);
-                    st.cb = cb.isChecked();
+                    st.setCb(cb.isChecked());
                 }
             });
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -67,29 +77,19 @@ public class StudentRecyclerList extends AppCompatActivity {
                     listener.onItemClick(pos);
                 }
             });
-
-            Button addStudentButton = (Button)findViewById(R.id.activityStudentRecyclerList_button);
-
-            addStudentButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(StudentRecyclerList.this, AddStudentActivity.class));
-                }
-            });
         }
 
         public void bind(Student st, int pos) {
-            nameTv.setText(st.name);
-            idTv.setText(st.id);
-            cb.setChecked(st.cb);
+            nameTv.setText(st.getName());
+            idTv.setText(st.getId());
+            cb.setChecked(st.getCb());
             cb.setTag(pos);
         }
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(int pos);
     }
-
 
     class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentViewHolder>{
         OnItemClickListener listener;
