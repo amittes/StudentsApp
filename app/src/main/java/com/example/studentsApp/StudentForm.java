@@ -1,9 +1,12 @@
 package com.example.studentsApp;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -17,6 +20,8 @@ public class StudentForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_form);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         EditText nameEt = findViewById(R.id.studentform_name_et);
         EditText idEt = findViewById(R.id.studentform_id_et);
@@ -29,6 +34,7 @@ public class StudentForm extends AppCompatActivity {
         int position = getIntent().getIntExtra("position", -1);
 
         if (position != -1) {
+            actionBar.setTitle("Edit Student");
             Button deleteBtn = findViewById(R.id.studentform_delete_btn);
             deleteBtn.setVisibility(Button.VISIBLE);
 
@@ -42,7 +48,7 @@ public class StudentForm extends AppCompatActivity {
                 Model.instance().deleteStudent(position);
                 finish();
             });
-        }
+        } else { actionBar.setTitle("New Student"); }
 
         saveBtn.setOnClickListener(view -> {
             String name = nameEt.getText().toString();

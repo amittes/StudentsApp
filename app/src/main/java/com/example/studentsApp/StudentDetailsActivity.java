@@ -1,5 +1,6 @@
 package com.example.studentsApp;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -25,6 +26,9 @@ public class StudentDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_details);
         int position = getIntent().getIntExtra("position", -1);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Student Details");
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         TextView id = findViewById(R.id.studentdetails_id_tv);
         TextView name = findViewById(R.id.studentdetails_name_tv);

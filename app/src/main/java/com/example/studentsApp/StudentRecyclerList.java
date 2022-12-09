@@ -1,6 +1,7 @@
 package com.example.studentsApp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,8 @@ public class StudentRecyclerList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_recycler_list);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Student List");
 
         studentsModel = Model.instance();
         RecyclerView list = findViewById(R.id.studentrecycler_list);
