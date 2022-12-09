@@ -20,27 +20,45 @@ import com.example.studentsApp.model.Student;
 import java.util.List;
 
 public class StudentRecyclerList extends AppCompatActivity {
-    List<Student> data;
+    Model studentsModel;
+    StudentRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_recycler_list);
 
-        data = Model.instance().getAllStudents();
+        studentsModel = Model.instance();
         RecyclerView list = findViewById(R.id.studentrecycler_list);
         list.setHasFixedSize(true);
 
         list.setLayoutManager(new LinearLayoutManager(this));
-        StudentRecyclerAdapter adapter = new StudentRecyclerAdapter();
+        adapter = new StudentRecyclerAdapter();
         list.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int pos) {
-                Log.d("TAG", "Row was clicked " + pos);
+                Intent studentDetailsIntent = new Intent(StudentRecyclerList.this, StudentDetailsActivity.class);
+                studentDetailsIntent.putExtra("position", pos);
+                startActivity(studentDetailsIntent);
             }
         });
+
+        Button addStudentButton = (Button)findViewById(R.id.activityStudentRecyclerList_button);
+
+        addStudentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StudentRecyclerList.this, StudentForm.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     class StudentViewHolder extends RecyclerView.ViewHolder{
@@ -55,9 +73,10 @@ public class StudentRecyclerList extends AppCompatActivity {
             cb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int pos = (int)cb.getTag();
-                    Student st = data.get(pos);
+                    int position = (int)cb.getTag();
+                    Student st = Model.instance().getStudent(position);
                     st.cb = cb.isChecked();
+                    Model.instance().editStudentDetails(position, st);
                 }
             });
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,15 +84,6 @@ public class StudentRecyclerList extends AppCompatActivity {
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
                     listener.onItemClick(pos);
-                }
-            });
-
-            Button addStudentButton = (Button)findViewById(R.id.activityStudentRecyclerList_button);
-
-            addStudentButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(StudentRecyclerList.this, AddStudentActivity.class));
                 }
             });
         }
@@ -90,12 +100,13 @@ public class StudentRecyclerList extends AppCompatActivity {
         void onItemClick(int pos);
     }
 
-
     class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentViewHolder>{
         OnItemClickListener listener;
+
         void setOnItemClickListener(OnItemClickListener listener){
             this.listener = listener;
         }
+
         @NonNull
         @Override
         public StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -105,13 +116,13 @@ public class StudentRecyclerList extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-            Student st = data.get(position);
+            Student st = studentsModel.getStudent(position);
             holder.bind(st,position);
         }
 
         @Override
         public int getItemCount() {
-            return data.size();
+            return studentsModel.size();
         }
         }
     }
